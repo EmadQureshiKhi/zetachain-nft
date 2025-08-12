@@ -1,0 +1,23 @@
+[package]
+name = "universal-nft"
+version = "0.1.0"
+description = "Universal NFT program for cross-chain transfers via ZetaChain"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "universal_nft"
+
+[features]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+cpi = ["no-entrypoint"]
+default = []
+
+[dependencies]
+anchor-lang = { workspace = true, features = ["init-if-needed"] }
+anchor-spl = { workspace = true }
+solana-program = { workspace = true }
+spl-token = { workspace = true }
+mpl-token-metadata = { workspace = true }
