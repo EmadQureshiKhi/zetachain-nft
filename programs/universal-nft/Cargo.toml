@@ -21,3 +21,4 @@ anchor-spl = { workspace = true }
 solana-program = { workspace = true }
 spl-token = { workspace = true }
 mpl-token-metadata = { workspace = true }
+hex = "0.4"

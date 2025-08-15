@@ -5,7 +5,7 @@ use mpl_token_metadata::instructions::{CreateMetadataAccountV3, CreateMasterEdit
 use crate::state::*;
 
 #[derive(Accounts)]
-pub struct MintNft<'info> {
+pub struct MintNftSimple<'info> {
     #[account(
         mut,
         seeds = [b"program_state"],
@@ -29,15 +29,6 @@ pub struct MintNft<'info> {
         associated_token::authority = recipient,
     )]
     pub token_account: Account<'info, TokenAccount>,
-    
-    #[account(
-        init,
-        payer = payer,
-        space = NftOrigin::LEN,
-        seeds = [b"nft_origin", mint.key().as_ref()],
-        bump
-    )]
-    pub nft_origin: Account<'info, NftOrigin>,
     
     /// CHECK: Metadata account will be created by Metaplex
     #[account(mut)]
@@ -69,14 +60,14 @@ pub struct MintNft<'info> {
     pub token_metadata_program: AccountInfo<'info>,
 }
 
-pub fn mint_nft(
-    ctx: Context<MintNft>,
+pub fn mint_nft_simple(
+    ctx: Context<MintNftSimple>,
     name: String,
     symbol: String,
     uri: String,
     creators: Option<Vec<Creator>>,
 ) -> Result<()> {
-    msg!("=== MINT NFT START ===");
+    msg!("=== MINT NFT SIMPLE START ===");
     msg!("Function entry successful");
     msg!("Name: {}", name);
     msg!("Symbol: {}", symbol);
@@ -87,7 +78,6 @@ pub fn mint_nft(
     msg!("Token Account: {}", ctx.accounts.token_account.key());
     msg!("Metadata Account: {}", ctx.accounts.metadata.key());
     msg!("Master Edition Account: {}", ctx.accounts.master_edition.key());
-    msg!("NFT Origin Account: {}", ctx.accounts.nft_origin.key());
     msg!("About to validate inputs...");
 
     // Validate inputs
@@ -108,12 +98,6 @@ pub fn mint_nft(
     msg!("Got mint reference");
     let token_account = &ctx.accounts.token_account;
     msg!("Got token_account reference");
-    let nft_origin = &mut ctx.accounts.nft_origin;
-    msg!("Got nft_origin reference");
-
-    // Generate unique token ID
-    let token_id = generate_token_id(&mint.key(), program_state)?;
-    msg!("Generated token_id: {:?}", token_id);
 
     // Validate creators if provided
     if let Some(ref creators_vec) = creators {
@@ -180,7 +164,27 @@ pub fn mint_nft(
         }
     }
 
-    // Create master edition
+    // Mint token to recipient FIRST (required before creating master edition)
+    msg!("Minting token to recipient...");
+    let mint_to_ctx = CpiContext::new_with_signer(
+        ctx.accounts.token_program.to_account_info(),
+        MintTo {
+            mint: ctx.accounts.mint.to_account_info(),
+            to: token_account.to_account_info(),
+            authority: ctx.accounts.mint_authority.to_account_info(),
+        },
+        signer_seeds,
+    );
+    
+    match token::mint_to(mint_to_ctx, 1) {
+        Ok(_) => msg!("✅ Token minted successfully"),
+        Err(e) => {
+            msg!("❌ Token mint failed: {:?}", e);
+            return Err(crate::errors::UniversalNftError::TokenMintFailed.into());
+        }
+    }
+
+    // Create master edition AFTER minting the token
     let create_master_edition_ix = CreateMasterEditionV3 {
         edition: ctx.accounts.master_edition.key(),
         mint: mint.key(),
@@ -219,89 +223,17 @@ pub fn mint_nft(
         }
     }
 
-    // Mint token to recipient
-    msg!("Minting token to recipient...");
-    let mint_to_ctx = CpiContext::new_with_signer(
-        ctx.accounts.token_program.to_account_info(),
-        MintTo {
-            mint: ctx.accounts.mint.to_account_info(),
-            to: token_account.to_account_info(),
-            authority: ctx.accounts.mint_authority.to_account_info(),
-        },
-        signer_seeds,
-    );
-    
-    match token::mint_to(mint_to_ctx, 1) {
-        Ok(_) => msg!("✅ Token minted successfully"),
-        Err(e) => {
-            msg!("❌ Token mint failed: {:?}", e);
-            return Err(crate::errors::UniversalNftError::TokenMintFailed.into());
-        }
-    }
-
-    // Store origin information
-    msg!("Storing NFT origin information...");
-    nft_origin.original_mint = mint.key();
-    nft_origin.token_id = token_id;
-    nft_origin.origin_chain_id = SOLANA_CHAIN_ID;
-    nft_origin.current_chain_id = SOLANA_CHAIN_ID;
-    nft_origin.block_number = Clock::get()?.slot;
-    nft_origin.transfer_count = 0;
-    nft_origin.last_transfer_timestamp = Clock::get()?.unix_timestamp;
-    nft_origin.bump = ctx.bumps.nft_origin;
-
     // Update program state
     program_state.next_token_id += 1;
     program_state.total_minted += 1;
 
     msg!("✅ NFT minted successfully:");
     msg!("  Mint: {}", mint.key());
-    msg!("  Token ID: {:?}", token_id);
     msg!("  Recipient: {}", ctx.accounts.recipient.key());
-    msg!("  Origin Chain: {}", nft_origin.origin_chain_id);
     msg!("  Total Minted: {}", program_state.total_minted);
     msg!("  Next Token ID: {}", program_state.next_token_id);
 
-    // Emit mint event
-    emit!(NftMintedEvent {
-        mint: mint.key(),
-        token_id,
-        recipient: ctx.accounts.recipient.key(),
-        name: name.clone(),
-        symbol: symbol.clone(),
-        uri: uri.clone(),
-        origin_chain_id: SOLANA_CHAIN_ID,
-        timestamp: Clock::get()?.unix_timestamp,
-    });
-
-    msg!("=== MINT NFT END ===");
+    msg!("=== MINT NFT SIMPLE END ===");
 
     Ok(())
-}
-
-fn generate_token_id(mint: &Pubkey, program_state: &ProgramState) -> Result<[u8; 32]> {
-    let mut token_id = [0u8; 32];
-    let mint_bytes = mint.to_bytes();
-    let clock = Clock::get()?;
-    let block_number = clock.slot.to_le_bytes();
-    let next_id = program_state.next_token_id.to_le_bytes();
-
-    // Combine mint pubkey + block number + next token ID
-    token_id[0..16].copy_from_slice(&mint_bytes[0..16]);
-    token_id[16..24].copy_from_slice(&block_number);
-    token_id[24..32].copy_from_slice(&next_id);
-
-    Ok(token_id)
-}
-
-#[event]
-pub struct NftMintedEvent {
-    pub mint: Pubkey,
-    pub token_id: [u8; 32],
-    pub recipient: Pubkey,
-    pub name: String,
-    pub symbol: String,
-    pub uri: String,
-    pub origin_chain_id: u64,
-    pub timestamp: i64,
 }

@@ -8,6 +8,9 @@ pub enum UniversalNftError {
     #[msg("Invalid gateway address")]
     InvalidGateway,
     
+    #[msg("Invalid gateway caller - only ZetaChain gateway can call this function")]
+    InvalidGatewayCaller,
+    
     #[msg("NFT not found")]
     NftNotFound,
     
@@ -40,4 +43,28 @@ pub enum UniversalNftError {
     
     #[msg("Rent exemption not met")]
     RentExemptionNotMet,
+    
+    #[msg("Invalid cross-chain message format")]
+    InvalidCrossChainMessage,
+    
+    #[msg("Cross-chain operation not supported")]
+    CrossChainNotSupported,
+    
+    #[msg("Invalid data format - could not parse UTF-8")]
+    InvalidDataFormat,
+    
+    #[msg("Revert message detected - transaction execution halted")]
+    RevertMessage,
+    
+    #[msg("Gateway deposit failed")]
+    GatewayDepositFailed,
+    
+    #[msg("Invalid instruction data")]
+    InvalidInstructionData,
+    
+    #[msg("Account validation failed")]
+    AccountValidationFailed,
+    
+    #[msg("Program state not initialized")]
+    ProgramNotInitialized,
 }
