@@ -1,0 +1,67 @@
+@import "tailwindcss";
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1f2937;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #4b5563;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #6b7280;
+}
+
+/* Solana wallet button styling */
+.wallet-adapter-button {
+  @apply bg-purple-600 hover:bg-purple-700 text-white font-medium px-4 py-2 rounded-xl transition-colors duration-200;
+}
+
+.wallet-adapter-button:not([disabled]):hover {
+  @apply bg-purple-700;
+}
+
+.wallet-adapter-button[disabled] {
+  @apply opacity-50 cursor-not-allowed;
+}
+
+.wallet-adapter-modal-wrapper {
+  @apply bg-gray-900 border border-gray-800 rounded-2xl;
+}
+
+.wallet-adapter-modal-title {
+  @apply text-white text-xl font-bold;
+}
+
+.wallet-adapter-modal-list {
+  @apply space-y-2;
+}
+
+.wallet-adapter-modal-list-item {
+  @apply bg-gray-800 hover:bg-gray-700 border border-gray-700 rounded-xl p-4 transition-colors duration-200;
+}
+
+/* RainbowKit custom styling */
+[data-rk] {
+  --rk-colors-modalBackground: #111827;
+  --rk-colors-modalBorder: #374151;
+  --rk-colors-modalText: #F9FAFB;
+  --rk-colors-profileAction: #1F2937;
+  --rk-colors-profileActionHover: #374151;
+  --rk-radii-modal: 16px;
+  --rk-radii-actionButton: 12px;
+}
+
+/* Line clamp utility */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}

@@ -1,0 +1,1340 @@
+{
+  "version": "0.1.0",
+  "name": "universal_nft",
+  "instructions": [
+    {
+      "name": "initialize",
+      "docs": [
+        "Initialize the Universal NFT program"
+      ],
+      "accounts": [
+        {
+          "name": "programState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "gateway",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "mintNft",
+      "docs": [
+        "Mint a new NFT on Solana"
+      ],
+      "accounts": [
+        {
+          "name": "programState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "mint",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "tokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "nftOrigin",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "metadata",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "masterEdition",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "mintAuthority",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "recipient",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenMetadataProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "symbol",
+          "type": "string"
+        },
+        {
+          "name": "uri",
+          "type": "string"
+        },
+        {
+          "name": "creators",
+          "type": {
+            "option": {
+              "vec": {
+                "defined": "Creator"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "transferCrossChain",
+      "docs": [
+        "Mint a new NFT on Solana (simplified version for testing)",
+        "Transfer NFT to another chain via ZetaChain"
+      ],
+      "accounts": [
+        {
+          "name": "programState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "mint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "nftOrigin",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "transferRecord",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "owner",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "gateway",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "gatewayPda",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "destinationChainId",
+          "type": "u64"
+        },
+        {
+          "name": "recipient",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "receiveCrossChain",
+      "docs": [
+        "Receive NFT from another chain via ZetaChain (called by gateway)"
+      ],
+      "accounts": [
+        {
+          "name": "programState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "mint",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "tokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "nftOrigin",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "metadata",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "mintAuthority",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "recipient",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "gateway",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenMetadataProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "tokenId",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          }
+        },
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "symbol",
+          "type": "string"
+        },
+        {
+          "name": "uri",
+          "type": "string"
+        },
+        {
+          "name": "creators",
+          "type": {
+            "option": {
+              "vec": {
+                "defined": "Creator"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "onCall",
+      "docs": [
+        "Called by ZetaChain gateway when receiving cross-chain calls"
+      ],
+      "accounts": [
+        {
+          "name": "programState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "gatewayPda",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "randomWallet",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "instructionSysvarAccount",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        },
+        {
+          "name": "sender",
+          "type": {
+            "array": [
+              "u8",
+              20
+            ]
+          }
+        },
+        {
+          "name": "data",
+          "type": "bytes"
+        }
+      ]
+    },
+    {
+      "name": "onRevert",
+      "docs": [
+        "Called by ZetaChain gateway when a cross-chain call reverts"
+      ],
+      "accounts": [
+        {
+          "name": "programState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "gatewayPda",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        },
+        {
+          "name": "sender",
+          "type": "publicKey"
+        },
+        {
+          "name": "data",
+          "type": "bytes"
+        }
+      ]
+    },
+    {
+      "name": "updateGateway",
+      "docs": [
+        "Update gateway address (admin only)"
+      ],
+      "accounts": [
+        {
+          "name": "programState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "newGateway",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "newGateway",
+          "type": "publicKey"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "ProgramState",
+      "docs": [
+        "Program state account"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "authority",
+            "docs": [
+              "Authority that can update the program"
+            ],
+            "type": "publicKey"
+          },
+          {
+            "name": "gateway",
+            "docs": [
+              "ZetaChain gateway address"
+            ],
+            "type": "publicKey"
+          },
+          {
+            "name": "nextTokenId",
+            "docs": [
+              "Next token ID counter"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "totalMinted",
+            "docs": [
+              "Total NFTs minted"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "totalTransfers",
+            "docs": [
+              "Total cross-chain transfers initiated"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "totalReceives",
+            "docs": [
+              "Total cross-chain receives processed"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "version",
+            "docs": [
+              "Program version for upgrades"
+            ],
+            "type": "u8"
+          },
+          {
+            "name": "bump",
+            "docs": [
+              "Bump seed for PDA"
+            ],
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "NftOrigin",
+      "docs": [
+        "NFT origin information for cross-chain tracking"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "originalMint",
+            "docs": [
+              "Original mint key (for NFTs first minted on Solana)"
+            ],
+            "type": "publicKey"
+          },
+          {
+            "name": "tokenId",
+            "docs": [
+              "Token ID used across chains"
+            ],
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "originChainId",
+            "docs": [
+              "Chain ID where NFT was originally minted"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "blockNumber",
+            "docs": [
+              "Block number when minted"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "currentChainId",
+            "docs": [
+              "Current chain ID (where NFT currently resides)"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "transferCount",
+            "docs": [
+              "Transfer count (how many times transferred)"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "lastTransferTimestamp",
+            "docs": [
+              "Last transfer timestamp"
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "bump",
+            "docs": [
+              "Bump seed for PDA"
+            ],
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "CrossChainTransfer",
+      "docs": [
+        "Cross-chain transfer state for tracking pending operations"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "tokenId",
+            "docs": [
+              "Token ID being transferred"
+            ],
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "sourceChainId",
+            "docs": [
+              "Source chain ID"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "destinationChainId",
+            "docs": [
+              "Destination chain ID"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "sender",
+            "docs": [
+              "Sender address"
+            ],
+            "type": "publicKey"
+          },
+          {
+            "name": "recipient",
+            "docs": [
+              "Recipient address"
+            ],
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "status",
+            "docs": [
+              "Transfer status"
+            ],
+            "type": {
+              "defined": "TransferStatus"
+            }
+          },
+          {
+            "name": "initiatedAt",
+            "docs": [
+              "Timestamp when transfer was initiated"
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "completedAt",
+            "docs": [
+              "Timestamp when transfer was completed (if applicable)"
+            ],
+            "type": {
+              "option": "i64"
+            }
+          },
+          {
+            "name": "errorMessage",
+            "docs": [
+              "Error message (if failed)"
+            ],
+            "type": {
+              "option": "string"
+            }
+          },
+          {
+            "name": "bump",
+            "docs": [
+              "Bump seed for PDA"
+            ],
+            "type": "u8"
+          }
+        ]
+      }
+    }
+  ],
+  "types": [
+    {
+      "name": "CrossChainMessage",
+      "docs": [
+        "Cross-chain message data for ZetaChain integration"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "messageType",
+            "docs": [
+              "Message type (mint, transfer, burn)"
+            ],
+            "type": {
+              "defined": "CrossChainMessageType"
+            }
+          },
+          {
+            "name": "tokenId",
+            "docs": [
+              "Token ID"
+            ],
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "sourceChainId",
+            "docs": [
+              "Source chain ID"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "destinationChainId",
+            "docs": [
+              "Destination chain ID"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "sender",
+            "docs": [
+              "Sender address (20 bytes for EVM compatibility)"
+            ],
+            "type": {
+              "array": [
+                "u8",
+                20
+              ]
+            }
+          },
+          {
+            "name": "recipient",
+            "docs": [
+              "Recipient address (32 bytes for Solana compatibility)"
+            ],
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "metadata",
+            "docs": [
+              "NFT metadata"
+            ],
+            "type": {
+              "defined": "NftMetadata"
+            }
+          },
+          {
+            "name": "timestamp",
+            "docs": [
+              "Timestamp"
+            ],
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "NftMetadata",
+      "docs": [
+        "NFT metadata structure compatible with Metaplex"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "name",
+            "docs": [
+              "NFT name"
+            ],
+            "type": "string"
+          },
+          {
+            "name": "symbol",
+            "docs": [
+              "NFT symbol"
+            ],
+            "type": "string"
+          },
+          {
+            "name": "uri",
+            "docs": [
+              "Metadata URI"
+            ],
+            "type": "string"
+          },
+          {
+            "name": "sellerFeeBasisPoints",
+            "docs": [
+              "Seller fee basis points"
+            ],
+            "type": "u16"
+          },
+          {
+            "name": "creators",
+            "docs": [
+              "Creators"
+            ],
+            "type": {
+              "option": {
+                "vec": {
+                  "defined": "NftCreator"
+                }
+              }
+            }
+          },
+          {
+            "name": "collection",
+            "docs": [
+              "Collection information"
+            ],
+            "type": {
+              "option": {
+                "defined": "NftCollection"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "NftCreator",
+      "docs": [
+        "Creator information compatible with Metaplex"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "address",
+            "docs": [
+              "Creator address (32 bytes for Solana, can be converted from 20 bytes EVM)"
+            ],
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "verified",
+            "docs": [
+              "Whether creator is verified"
+            ],
+            "type": "bool"
+          },
+          {
+            "name": "share",
+            "docs": [
+              "Creator's share percentage (0-100)"
+            ],
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "NftCollection",
+      "docs": [
+        "Collection information"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "address",
+            "docs": [
+              "Collection mint address"
+            ],
+            "type": "publicKey"
+          },
+          {
+            "name": "verified",
+            "docs": [
+              "Whether this NFT is verified as part of the collection"
+            ],
+            "type": "bool"
+          }
+        ]
+      }
+    },
+    {
+      "name": "RevertOptions",
+      "docs": [
+        "Revert options for cross-chain operations (compatible with ZetaChain)"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "revertAddress",
+            "docs": [
+              "Solana address to receive tokens back if revert occurs"
+            ],
+            "type": "publicKey"
+          },
+          {
+            "name": "abortAddress",
+            "docs": [
+              "EVM-style address to receive tokens if abort occurs"
+            ],
+            "type": {
+              "array": [
+                "u8",
+                20
+              ]
+            }
+          },
+          {
+            "name": "callOnRevert",
+            "docs": [
+              "Whether to call on_revert function"
+            ],
+            "type": "bool"
+          },
+          {
+            "name": "revertMessage",
+            "docs": [
+              "Message to pass to revert function"
+            ],
+            "type": "bytes"
+          },
+          {
+            "name": "onRevertGasLimit",
+            "docs": [
+              "Gas limit for revert operation"
+            ],
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "CrossChainMessageType",
+      "docs": [
+        "Cross-chain message types"
+      ],
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Mint"
+          },
+          {
+            "name": "Transfer"
+          },
+          {
+            "name": "Burn"
+          },
+          {
+            "name": "Revert"
+          }
+        ]
+      }
+    },
+    {
+      "name": "TransferStatus",
+      "docs": [
+        "Transfer status enumeration"
+      ],
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Pending"
+          },
+          {
+            "name": "InProgress"
+          },
+          {
+            "name": "Completed"
+          },
+          {
+            "name": "Failed"
+          },
+          {
+            "name": "Cancelled"
+          }
+        ]
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "ProgramInitializedEvent",
+      "fields": [
+        {
+          "name": "authority",
+          "type": "publicKey",
+          "index": false
+        },
+        {
+          "name": "gateway",
+          "type": "publicKey",
+          "index": false
+        },
+        {
+          "name": "version",
+          "type": "u8",
+          "index": false
+        },
+        {
+          "name": "timestamp",
+          "type": "i64",
+          "index": false
+        }
+      ]
+    },
+    {
+      "name": "NftMintedEvent",
+      "fields": [
+        {
+          "name": "mint",
+          "type": "publicKey",
+          "index": false
+        },
+        {
+          "name": "tokenId",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          },
+          "index": false
+        },
+        {
+          "name": "recipient",
+          "type": "publicKey",
+          "index": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "index": false
+        },
+        {
+          "name": "symbol",
+          "type": "string",
+          "index": false
+        },
+        {
+          "name": "uri",
+          "type": "string",
+          "index": false
+        },
+        {
+          "name": "originChainId",
+          "type": "u64",
+          "index": false
+        },
+        {
+          "name": "timestamp",
+          "type": "i64",
+          "index": false
+        }
+      ]
+    },
+    {
+      "name": "CrossChainRevertEvent",
+      "fields": [
+        {
+          "name": "tokenId",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          },
+          "index": false
+        },
+        {
+          "name": "operationType",
+          "type": {
+            "defined": "CrossChainMessageType"
+          },
+          "index": false
+        },
+        {
+          "name": "reason",
+          "type": "string",
+          "index": false
+        },
+        {
+          "name": "originalSender",
+          "type": "publicKey",
+          "index": false
+        },
+        {
+          "name": "amount",
+          "type": "u64",
+          "index": false
+        },
+        {
+          "name": "timestamp",
+          "type": "i64",
+          "index": false
+        }
+      ]
+    },
+    {
+      "name": "CrossChainReceiveEvent",
+      "fields": [
+        {
+          "name": "tokenId",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          },
+          "index": false
+        },
+        {
+          "name": "mint",
+          "type": "publicKey",
+          "index": false
+        },
+        {
+          "name": "recipient",
+          "type": "publicKey",
+          "index": false
+        },
+        {
+          "name": "isReturning",
+          "type": "bool",
+          "index": false
+        },
+        {
+          "name": "sourceChainId",
+          "type": "u64",
+          "index": false
+        },
+        {
+          "name": "transferCount",
+          "type": "u64",
+          "index": false
+        },
+        {
+          "name": "timestamp",
+          "type": "i64",
+          "index": false
+        }
+      ]
+    },
+    {
+      "name": "CrossChainTransferEvent",
+      "fields": [
+        {
+          "name": "tokenId",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          },
+          "index": false
+        },
+        {
+          "name": "fromChain",
+          "type": "u64",
+          "index": false
+        },
+        {
+          "name": "toChain",
+          "type": "u64",
+          "index": false
+        },
+        {
+          "name": "sender",
+          "type": "publicKey",
+          "index": false
+        },
+        {
+          "name": "recipient",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          },
+          "index": false
+        },
+        {
+          "name": "transferCount",
+          "type": "u64",
+          "index": false
+        },
+        {
+          "name": "timestamp",
+          "type": "i64",
+          "index": false
+        }
+      ]
+    },
+    {
+      "name": "GatewayUpdatedEvent",
+      "fields": [
+        {
+          "name": "oldGateway",
+          "type": "publicKey",
+          "index": false
+        },
+        {
+          "name": "newGateway",
+          "type": "publicKey",
+          "index": false
+        },
+        {
+          "name": "authority",
+          "type": "publicKey",
+          "index": false
+        }
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "Unauthorized",
+      "msg": "Unauthorized access"
+    },
+    {
+      "code": 6001,
+      "name": "InvalidGateway",
+      "msg": "Invalid gateway address"
+    },
+    {
+      "code": 6002,
+      "name": "InvalidGatewayCaller",
+      "msg": "Invalid gateway caller - only ZetaChain gateway can call this function"
+    },
+    {
+      "code": 6003,
+      "name": "NftNotFound",
+      "msg": "NFT not found"
+    },
+    {
+      "code": 6004,
+      "name": "InvalidTokenId",
+      "msg": "Invalid token ID"
+    },
+    {
+      "code": 6005,
+      "name": "InvalidChainId",
+      "msg": "Invalid chain ID"
+    },
+    {
+      "code": 6006,
+      "name": "MetadataCreationFailed",
+      "msg": "Metadata creation failed"
+    },
+    {
+      "code": 6007,
+      "name": "MasterEditionCreationFailed",
+      "msg": "Master edition creation failed"
+    },
+    {
+      "code": 6008,
+      "name": "TokenMintFailed",
+      "msg": "Token mint failed"
+    },
+    {
+      "code": 6009,
+      "name": "TokenBurnFailed",
+      "msg": "Token burn failed"
+    },
+    {
+      "code": 6010,
+      "name": "CrossChainTransferFailed",
+      "msg": "Cross-chain transfer failed"
+    },
+    {
+      "code": 6011,
+      "name": "InvalidRecipient",
+      "msg": "Invalid recipient address"
+    },
+    {
+      "code": 6012,
+      "name": "InsufficientComputeBudget",
+      "msg": "Insufficient compute budget"
+    },
+    {
+      "code": 6013,
+      "name": "RentExemptionNotMet",
+      "msg": "Rent exemption not met"
+    },
+    {
+      "code": 6014,
+      "name": "InvalidCrossChainMessage",
+      "msg": "Invalid cross-chain message format"
+    },
+    {
+      "code": 6015,
+      "name": "CrossChainNotSupported",
+      "msg": "Cross-chain operation not supported"
+    },
+    {
+      "code": 6016,
+      "name": "InvalidDataFormat",
+      "msg": "Invalid data format - could not parse UTF-8"
+    },
+    {
+      "code": 6017,
+      "name": "RevertMessage",
+      "msg": "Revert message detected - transaction execution halted"
+    },
+    {
+      "code": 6018,
+      "name": "GatewayDepositFailed",
+      "msg": "Gateway deposit failed"
+    },
+    {
+      "code": 6019,
+      "name": "InvalidInstructionData",
+      "msg": "Invalid instruction data"
+    },
+    {
+      "code": 6020,
+      "name": "AccountValidationFailed",
+      "msg": "Account validation failed"
+    },
+    {
+      "code": 6021,
+      "name": "ProgramNotInitialized",
+      "msg": "Program state not initialized"
+    }
+  ],
+  "metadata": {
+    "address": "89BWBddtdbMriDFjotkPyzDvcehdJaZMvPYU1LifVjRc"
+  }
+}
