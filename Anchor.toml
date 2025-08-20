@@ -3,10 +3,10 @@ seeds = false
 skip-lint = false
 
 [programs.localnet]
-universal_nft = "GQ8QTva9cd87hoRugkUADDVdb8nSpvcA4iStrVr7vD4s"
+universal_nft = "89BWBddtdbMriDFjotkPyzDvcehdJaZMvPYU1LifVjRc"
 
 [programs.devnet]
-universal_nft = "GQ8QTva9cd87hoRugkUADDVdb8nSpvcA4iStrVr7vD4s"
+universal_nft = "89BWBddtdbMriDFjotkPyzDvcehdJaZMvPYU1LifVjRc"
 
 [registry]
 url = "https://api.apr.dev"
