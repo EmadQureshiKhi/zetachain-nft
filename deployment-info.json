@@ -1,0 +1,19 @@
+{
+  "programId": "89BWBddtdbMriDFjotkPyzDvcehdJaZMvPYU1LifVjRc",
+  "network": "devnet",
+  "deployedAt": "2025-01-17T20:15:00Z",
+  "rpcUrl": "https://api.devnet.solana.com",
+  "programStatePda": "E46P1ev8UYUnkRFtngqwXQe61RBqFNVTp2cZnDRTDZTB",
+  "bump": 254,
+  "initialized": true,
+  "initializeTransaction": "hk2fN7mxk6fJqTU8pJKQUnHCc4je4rk6YUbrbCGUERSzxjE5JBvym8iCeozJBE6G91Fi2SUcgvZLC2wEngzizbw",
+  "authority": "GjyjvJLfrNxT5FdzruCiSRK1xDqmnJHYdAxiahbyxc29",
+  "gateway": "ZETAjseVjuFsxdRxo6MmTCvqFwb3ZHUx56Co3vCmGis",
+  "zetachainContract": "0x59F9ADD4648fE1475fFF361EC5C6390E08c56c17",
+  "zetachainChainId": 7001,
+  "zetachainGateway": "0x6c533f7fe93fae114d0954697069df33c9b74fd7",
+  "crossChainEnabled": true,
+  "lastUpdated": "2025-08-20T13:10:00Z",
+  "zetachainTransactionHash": "0x842fefbe96f5dba003a236706458b6c2ca90f4c01c0822229e4e86a7e90c0548",
+  "zetachainBlockNumber": 12213361
+}

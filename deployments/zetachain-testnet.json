@@ -1,0 +1,15 @@
+{
+  "network": "testnet",
+  "chainId": 7001,
+  "contractAddress": "0x7D70ca0889e19858104A6FBB46E7F62Dd2Db331b",
+  "deployerAddress": "0x54Faf4F1ceec0846f4d36ED314e176B60e1a21FE",
+  "transactionHash": "0x26c1ed4680772eb07472bd76dee40d4cef4fb4d97dbe95d24e8eee0e2a0e14e8",
+  "blockNumber": 12212805,
+  "gasUsed": "3000000",
+  "gasPrice": "20000000000",
+  "gateway": "0x6c533f7fe93fae114d0954697069df33c9b74fd7",
+  "deployedAt": "2025-08-20T12:55:00Z",
+  "explorerUrl": "https://zetachain-athens.blockscout.com/address/0x7D70ca0889e19858104A6FBB46E7F62Dd2Db331b",
+  "transactionUrl": "https://zetachain-athens.blockscout.com/tx/0x26c1ed4680772eb07472bd76dee40d4cef4fb4d97dbe95d24e8eee0e2a0e14e8",
+  "status": "deployed"
+}

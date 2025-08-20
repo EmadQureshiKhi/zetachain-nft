@@ -1,0 +1,17 @@
+{
+  "network": "testnet",
+  "chainId": 7001,
+  "contractAddress": "0x59F9ADD4648fE1475fFF361EC5C6390E08c56c17",
+  "deployerAddress": "0x54Faf4F1ceec0846f4d36ED314e176B60e1a21FE",
+  "transactionHash": "0x842fefbe96f5dba003a236706458b6c2ca90f4c01c0822229e4e86a7e90c0548",
+  "blockNumber": 12213361,
+  "gasUsed": "2000000",
+  "gasPrice": "20000000000",
+  "gateway": "0x6c533f7fe93fae114d0954697069df33c9b74fd7",
+  "deployedAt": "2025-08-20T13:10:00Z",
+  "explorerUrl": "https://athens.explorer.zetachain.com/evm/address/0x59F9ADD4648fE1475fFF361EC5C6390E08c56c17",
+  "transactionUrl": "https://athens.explorer.zetachain.com/evm/tx/0x842fefbe96f5dba003a236706458b6c2ca90f4c01c0822229e4e86a7e90c0548",
+  "contractType": "SimpleUniversalNFT",
+  "status": "deployed",
+  "note": "Transaction shows as failed but contract was created successfully"
+}

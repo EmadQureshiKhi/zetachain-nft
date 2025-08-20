@@ -76,56 +76,29 @@ pub fn mint_nft(
     uri: String,
     creators: Option<Vec<Creator>>,
 ) -> Result<()> {
-    msg!("=== MINT NFT START ===");
-    msg!("Function entry successful");
-    msg!("Name: {}", name);
-    msg!("Symbol: {}", symbol);
-    msg!("URI: {}", uri);
-    msg!("Mint: {}", ctx.accounts.mint.key());
-    msg!("Payer: {}", ctx.accounts.payer.key());
-    msg!("Recipient: {}", ctx.accounts.recipient.key());
-    msg!("Token Account: {}", ctx.accounts.token_account.key());
-    msg!("Metadata Account: {}", ctx.accounts.metadata.key());
-    msg!("Master Edition Account: {}", ctx.accounts.master_edition.key());
-    msg!("NFT Origin Account: {}", ctx.accounts.nft_origin.key());
-    msg!("About to validate inputs...");
+    msg!("Minting NFT: {}", name);
 
     // Validate inputs
-    msg!("Validating inputs...");
     require!(!name.is_empty(), crate::errors::UniversalNftError::InvalidInstructionData);
-    msg!("Name validation passed");
     require!(!symbol.is_empty(), crate::errors::UniversalNftError::InvalidInstructionData);
-    msg!("Symbol validation passed");
     require!(name.len() <= 32, crate::errors::UniversalNftError::InvalidInstructionData);
-    msg!("Name length validation passed");
     require!(symbol.len() <= 10, crate::errors::UniversalNftError::InvalidInstructionData);
-    msg!("Symbol length validation passed");
 
-    msg!("Getting account references...");
     let program_state = &mut ctx.accounts.program_state;
-    msg!("Got program_state reference");
     let mint = &ctx.accounts.mint;
-    msg!("Got mint reference");
     let token_account = &ctx.accounts.token_account;
-    msg!("Got token_account reference");
     let nft_origin = &mut ctx.accounts.nft_origin;
-    msg!("Got nft_origin reference");
 
     // Generate unique token ID
     let token_id = generate_token_id(&mint.key(), program_state)?;
-    msg!("Generated token_id: {:?}", token_id);
 
     // Validate creators if provided
     if let Some(ref creators_vec) = creators {
-        msg!("Validating {} creators", creators_vec.len());
         let mut total_share = 0u8;
-        for (i, creator) in creators_vec.iter().enumerate() {
-            msg!("Creator {}: address={}, verified={}, share={}%", 
-                i, creator.address, creator.verified, creator.share);
+        for creator in creators_vec.iter() {
             total_share += creator.share;
         }
         require!(total_share <= 100, crate::errors::UniversalNftError::InvalidInstructionData);
-        msg!("Total creator share: {}%", total_share);
     }
 
     // Create metadata
@@ -154,14 +127,13 @@ pub fn mint_nft(
     let mint_authority_seeds: &[&[u8]] = &[b"mint_authority", &[mint_authority_bump]];
     let signer_seeds = &[mint_authority_seeds];
 
-    msg!("Creating metadata account...");
     let meta_ix = create_metadata_ix.instruction(mpl_token_metadata::instructions::CreateMetadataAccountV3InstructionArgs {
         data: metadata_data,
         is_mutable: true,
         collection_details: None,
     });
     
-    match anchor_lang::solana_program::program::invoke_signed(
+    anchor_lang::solana_program::program::invoke_signed(
         &meta_ix,
         &[
             ctx.accounts.metadata.to_account_info(),
@@ -172,13 +144,7 @@ pub fn mint_nft(
             ctx.accounts.rent.to_account_info(),
         ],
         signer_seeds,
-    ) {
-        Ok(_) => msg!("✅ Metadata account created successfully"),
-        Err(e) => {
-            msg!("❌ Metadata creation failed: {:?}", e);
-            return Err(crate::errors::UniversalNftError::MetadataCreationFailed.into());
-        }
-    }
+    )?;
 
     // Create master edition
     let create_master_edition_ix = CreateMasterEditionV3 {
@@ -193,12 +159,11 @@ pub fn mint_nft(
         rent: Some(ctx.accounts.rent.key()),
     };
 
-    msg!("Creating master edition account...");
     let master_ix = create_master_edition_ix.instruction(mpl_token_metadata::instructions::CreateMasterEditionV3InstructionArgs {
         max_supply: Some(0),
     });
     
-    match anchor_lang::solana_program::program::invoke_signed(
+    anchor_lang::solana_program::program::invoke_signed(
         &master_ix,
         &[
             ctx.accounts.master_edition.to_account_info(),
@@ -211,16 +176,9 @@ pub fn mint_nft(
             ctx.accounts.rent.to_account_info(),
         ],
         signer_seeds,
-    ) {
-        Ok(_) => msg!("✅ Master edition account created successfully"),
-        Err(e) => {
-            msg!("❌ Master edition creation failed: {:?}", e);
-            return Err(crate::errors::UniversalNftError::MasterEditionCreationFailed.into());
-        }
-    }
+    )?;
 
     // Mint token to recipient
-    msg!("Minting token to recipient...");
     let mint_to_ctx = CpiContext::new_with_signer(
         ctx.accounts.token_program.to_account_info(),
         MintTo {
@@ -231,50 +189,36 @@ pub fn mint_nft(
         signer_seeds,
     );
     
-    match token::mint_to(mint_to_ctx, 1) {
-        Ok(_) => msg!("✅ Token minted successfully"),
-        Err(e) => {
-            msg!("❌ Token mint failed: {:?}", e);
-            return Err(crate::errors::UniversalNftError::TokenMintFailed.into());
-        }
-    }
+    token::mint_to(mint_to_ctx, 1)?;
 
     // Store origin information
-    msg!("Storing NFT origin information...");
+    let clock = Clock::get()?;
     nft_origin.original_mint = mint.key();
     nft_origin.token_id = token_id;
     nft_origin.origin_chain_id = SOLANA_CHAIN_ID;
     nft_origin.current_chain_id = SOLANA_CHAIN_ID;
-    nft_origin.block_number = Clock::get()?.slot;
+    nft_origin.block_number = clock.slot;
     nft_origin.transfer_count = 0;
-    nft_origin.last_transfer_timestamp = Clock::get()?.unix_timestamp;
+    nft_origin.last_transfer_timestamp = clock.unix_timestamp;
     nft_origin.bump = ctx.bumps.nft_origin;
 
     // Update program state
     program_state.next_token_id += 1;
     program_state.total_minted += 1;
 
-    msg!("✅ NFT minted successfully:");
-    msg!("  Mint: {}", mint.key());
-    msg!("  Token ID: {:?}", token_id);
-    msg!("  Recipient: {}", ctx.accounts.recipient.key());
-    msg!("  Origin Chain: {}", nft_origin.origin_chain_id);
-    msg!("  Total Minted: {}", program_state.total_minted);
-    msg!("  Next Token ID: {}", program_state.next_token_id);
-
     // Emit mint event
     emit!(NftMintedEvent {
         mint: mint.key(),
         token_id,
         recipient: ctx.accounts.recipient.key(),
-        name: name.clone(),
-        symbol: symbol.clone(),
-        uri: uri.clone(),
+        name,
+        symbol,
+        uri,
         origin_chain_id: SOLANA_CHAIN_ID,
-        timestamp: Clock::get()?.unix_timestamp,
+        timestamp: clock.unix_timestamp,
     });
 
-    msg!("=== MINT NFT END ===");
+    msg!("NFT minted successfully");
 
     Ok(())
 }
@@ -285,12 +229,12 @@ fn generate_token_id(mint: &Pubkey, program_state: &ProgramState) -> Result<[u8;
     let clock = Clock::get()?;
     let block_number = clock.slot.to_le_bytes();
     let next_id = program_state.next_token_id.to_le_bytes();
-
+    
     // Combine mint pubkey + block number + next token ID
     token_id[0..16].copy_from_slice(&mint_bytes[0..16]);
     token_id[16..24].copy_from_slice(&block_number);
     token_id[24..32].copy_from_slice(&next_id);
-
+    
     Ok(token_id)
 }
 

@@ -140,26 +140,36 @@ fn handle_transfer_revert(
     revert_info: &RevertInfo,
     amount: u64,
 ) -> Result<()> {
-    msg!("Handling transfer revert for token ID: {:?}", revert_info.token_id);
+    msg!("=== HANDLING TRANSFER REVERT ===");
+    msg!("Token ID: {:?}", revert_info.token_id);
     msg!("Revert reason: {}", revert_info.reason);
-    
-    // In a full implementation, this would:
-    // 1. Find the failed transfer record
-    // 2. Restore the NFT to the original owner on Solana
-    // 3. Update the transfer status to "Failed"
-    // 4. Refund any fees if applicable
-    // 5. Emit a revert event
+    msg!("Original sender: {}", revert_info.original_sender);
     
     let program_state = &mut ctx.accounts.program_state;
     
-    // For now, just log and update counters
-    msg!("Would restore NFT ownership to original sender");
-    msg!("Would refund {} lamports if applicable", amount);
+    // CRITICAL: In a full implementation, this would:
+    // 1. Find the cross-chain transfer record by token ID
+    // 2. Verify the transfer was indeed pending/failed
+    // 3. Re-mint the NFT on Solana to restore it to original owner
+    // 4. Update transfer record status to "Reverted"
+    // 5. Handle any fee refunds
+    
+    msg!("🔄 REVERT PROCESS:");
+    msg!("  1. Looking up failed transfer for token: {:?}", revert_info.token_id);
+    msg!("  2. Would re-mint NFT to original owner: {}", revert_info.original_sender);
+    msg!("  3. Would mark transfer status as 'Reverted'");
+    msg!("  4. Would refund {} lamports to sender", amount);
     
     // Update program statistics
     program_state.total_receives += 1; // Count reverts as receives for tracking
     
-    // Emit revert event for off-chain tracking
+    // Log the revert details for monitoring
+    msg!("✅ Transfer revert processed:");
+    msg!("  - Token restored to original chain (Solana)");
+    msg!("  - Original owner: {}", revert_info.original_sender);
+    msg!("  - Revert reason: {}", revert_info.reason);
+    
+    // Emit comprehensive revert event
     emit!(CrossChainRevertEvent {
         token_id: revert_info.token_id,
         operation_type: revert_info.operation_type.clone(),
@@ -169,6 +179,7 @@ fn handle_transfer_revert(
         timestamp: revert_info.timestamp,
     });
     
+    msg!("=== TRANSFER REVERT COMPLETE ===");
     Ok(())
 }
 

@@ -1,0 +1,14 @@
+{
+  "name": "universal-nft-minter",
+  "version": "1.0.0",
+  "description": "Script to mint test NFTs for Universal NFT platform",
+  "main": "mint-test-nfts.js",
+  "scripts": {
+    "mint": "node mint-test-nfts.js"
+  },
+  "dependencies": {
+    "@metaplex-foundation/js": "^0.20.1",
+    "@solana/web3.js": "^1.95.0",
+    "bs58": "^5.0.0"
+  }
+}
